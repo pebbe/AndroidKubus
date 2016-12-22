@@ -61,53 +61,53 @@ public class Kubus {
     public Kubus(Context context) {
         vertexCount = 0;
 
-        // boven
-        punt(-1, 1, -1, 0, 0, 1);
-        punt(-1, 1,  1, 0, 1, 1);
+        // boven 6
+        punt(-1, 1, -1, 5.0f/6, 0, 1);
+        punt(-1, 1,  1, 5.0f/6, 1, 1);
         punt( 1, 1,  1, 1, 1, 1);
-        punt(-1, 1, -1, 0, 0, 1);
+        punt(-1, 1, -1, 5.0f/6, 0, 1);
         punt( 1, 1,  1, 1, 1, 1);
         punt( 1, 1, -1, 1, 0, 1);
 
-        // links
-        punt(-1,  1, -1, 0, 0, .85f);
-        punt(-1, -1, -1, 0, 1, .85f);
-        punt(-1, -1,  1, 1, 1, .85f);
-        punt(-1,  1, -1, 0, 0, .85f);
-        punt(-1, -1,  1, 1, 1, .85f);
-        punt(-1,  1,  1, 1, 0, .85f);
+        // links 2
+        punt(-1,  1, -1, 1.0f/6, 0, .85f);
+        punt(-1, -1, -1, 1.0f/6, 1, .85f);
+        punt(-1, -1,  1, 2.0f/6, 1, .85f);
+        punt(-1,  1, -1, 1.0f/6, 0, .85f);
+        punt(-1, -1,  1, 2.0f/6, 1, .85f);
+        punt(-1,  1,  1, 2.0f/6, 0, .85f);
 
-        // voor
-        punt(-1,  1, 1, 0, 0, .7f);
-        punt(-1, -1, 1, 0, 1, .7f);
-        punt( 1, -1, 1, 1, 1, .7f);
-        punt(-1,  1, 1, 0, 0, .7f);
-        punt( 1, -1, 1, 1, 1, .7f);
-        punt( 1,  1, 1, 1, 0, .7f);
+        // voor 4
+        punt(-1,  1, 1, 3.0f/6, 0, .7f);
+        punt(-1, -1, 1, 3.0f/6, 1, .7f);
+        punt( 1, -1, 1, 4.0f/6, 1, .7f);
+        punt(-1,  1, 1, 3.0f/6, 0, .7f);
+        punt( 1, -1, 1, 4.0f/6, 1, .7f);
+        punt( 1,  1, 1, 4.0f/6, 0, .7f);
 
-        // rechts
-        punt(1,  1,  1, 0, 0, .4f);
-        punt(1, -1,  1, 0, 1, .4f);
-        punt(1, -1, -1, 1, 1, .4f);
-        punt(1,  1,  1, 0, 0, .4f);
-        punt(1, -1, -1, 1, 1, .4f);
-        punt(1,  1, -1, 1, 0, .4f);
+        // rechts 5
+        punt(1,  1,  1, 4.0f/6, 0, .4f);
+        punt(1, -1,  1, 4.0f/6, 1, .4f);
+        punt(1, -1, -1, 5.0f/6, 1, .4f);
+        punt(1,  1,  1, 4.0f/6, 0, .4f);
+        punt(1, -1, -1, 5.0f/6, 1, .4f);
+        punt(1,  1, -1, 5.0f/6, 0, .4f);
 
-        // achter
-        punt( 1,  1, -1, 0, 0, .55f);
-        punt( 1, -1, -1, 0, 1, .55f);
-        punt(-1, -1, -1, 1, 1, .55f);
-        punt( 1,  1, -1, 0, 0, .55f);
-        punt(-1, -1, -1, 1, 1, .55f);
-        punt(-1,  1, -1, 1, 0, .55f);
+        // achter 3
+        punt( 1,  1, -1, 2.0f/6, 0, .55f);
+        punt( 1, -1, -1, 2.0f/6, 1, .55f);
+        punt(-1, -1, -1, 3.0f/6, 1, .55f);
+        punt( 1,  1, -1, 2.0f/6, 0, .55f);
+        punt(-1, -1, -1, 3.0f/6, 1, .55f);
+        punt(-1,  1, -1, 3.0f/6, 0, .55f);
 
-        // onder
+        // onder 1
         punt(-1, -1,  1, 0, 0, .25f);
         punt(-1, -1, -1, 0, 1, .25f);
-        punt( 1, -1, -1, 1, 1, .25f);
+        punt( 1, -1, -1, 1.0f/6, 1, .25f);
         punt(-1, -1,  1, 0, 0, .25f);
-        punt( 1, -1, -1, 1, 1, .25f);
-        punt( 1, -1,  1, 1, 0, .25f);
+        punt( 1, -1, -1, 1.0f/6, 1, .25f);
+        punt( 1, -1,  1, 1.0f/6, 0, .25f);
 
 
         ByteBuffer b1 = ByteBuffer.allocateDirect(ARRAY_SIZE * 4);
@@ -141,7 +141,7 @@ public class Kubus {
         GLES20.glGenTextures(1, texturenames, 0);
 
         // Temporary create a bitmap
-        Bitmap bmp = BitmapFactory.decodeResource(context.getResources(), R.raw.beton);
+        Bitmap bmp = BitmapFactory.decodeResource(context.getResources(), R.raw.dice);
 
         // Bind texture to texturename
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
