@@ -6,16 +6,50 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.view.MotionEvent;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.DelayQueue;
+
 public class MyGLSurfaceView extends GLSurfaceView {
 
     private final MyGLRenderer mRenderer;
 
     private float mDensity;
 
+    private long delay = 1000;
+
+    private BlockingQueue queue;
+
+    private boolean running;
+
+    private Thread consumerThread =  new Thread(new Runnable() {
+        @Override
+        public void run() {
+            while (true) {
+                try {
+                    DelayObject object = (DelayObject) queue.take();
+                    if (running) {
+                        mRenderer.setAngleH(mRenderer.getAngleH() - object.dh * TOUCH_SCALE_FACTOR / mDensity);
+                        float a = mRenderer.getAngleV() + object.dv * TOUCH_SCALE_FACTOR / mDensity;
+                        if (a > 89.99f) {
+                            a = 89.99f;
+                        } else if (a < -89.99f) {
+                            a = -89.99f;
+                        }
+                        mRenderer.setAngleV(a);
+                        requestRender();
+                    }
+                } catch (InterruptedException e) {
+                }
+            }
+        }
+    });
+
     public MyGLSurfaceView(Context context, Bundle savedInstanceState, float density) {
         super(context);
 
         mDensity = density;
+
+        queue = new DelayQueue();
 
         // Create an OpenGL ES 2.0 context
         setEGLContextClientVersion(2);
@@ -29,6 +63,8 @@ public class MyGLSurfaceView extends GLSurfaceView {
 
         // Render the view only when there is a change in the drawing data
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+
+        consumerThread.start();
     }
 
     public void saveInstanceState(Bundle outState) {
@@ -64,24 +100,11 @@ public class MyGLSurfaceView extends GLSurfaceView {
         if (pointerCount == 1) {
 
             if (moved && mSingle) {
-
-                float dx = x0 - mPreviousX;
-                float dy = y0 - mPreviousY;
-                if (Math.abs(dx) > Math.abs(dy)) {
-                    mRenderer.setAngleH(
-                            mRenderer.getAngleH() -
-                                    dx * TOUCH_SCALE_FACTOR / mDensity);  // = 180.0f / 320
-
-                } else {
-                    float a = mRenderer.getAngleV() + dy * TOUCH_SCALE_FACTOR / mDensity;
-                    if (a > 89.99f) {
-                        a = 89.99f;
-                    } else if (a < -89.99f) {
-                        a = -89.99f;
-                    }
-                    mRenderer.setAngleV(a);
+                DelayObject object = new DelayObject(x0 - mPreviousX, y0 - mPreviousY, delay);
+                try {
+                    queue.put(object);
+                } catch (Exception ex) {
                 }
-                requestRender();
             }
 
             mPreviousX = x0;
@@ -103,4 +126,16 @@ public class MyGLSurfaceView extends GLSurfaceView {
         return true;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        running = false;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        queue.clear();
+        running = true;
+    }
 }
